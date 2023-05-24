@@ -1,39 +1,47 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-const users = ref([
-  {id: 1, name: 'Emily', age: 21},
-  {id: 2, name: 'Eva', age: 25},
-  {id: 3, name: 'Oleg', age: 50},
+const products = ref([
+  'Бананы',
+  'Яблоки',
+  'Хлеб',
+  'Сметана',
+  'Молоко',
+  'Снеки',
+  'Шоколад',
+  'Морковь',
 ]);
 
+const query = ref('');
+
+const queryProducts = computed(() => {
+  return products.value.filter((product) => product.indexOf(query.value) !== -1);
+})
 </script>
 
 <template>
   <div>
+    <input
+      type="search"
+      placeholder="Поиск продуктов..."
+      v-model="query"
+    >
+    <br>
+    <br>
+
+    {{ query }}
+
     <ul>
       <li
-        v-for="user in users"
-        :key="user.id"
+        v-for="product in queryProducts"
+        :key="product"
       >
-        {{  user.name }}
-        <sup :class="{
-          'red': user.age < 30,
-          'fz-24': user.name === 'Eva',
-          }">
-          {{ user.age }}
-        </sup>
+        {{ product }}
       </li>
     </ul>
   </div>
 </template>
 
 <style>
-  .red {
-    color: red;
-  }
 
-  .fz-24 {
-    font-size: 24px;
-  }
 </style>
