@@ -1,28 +1,25 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 
-const count = ref(0);
-const counter = reactive({
-  count: 5
-});
+const users = ref([
+  {id: 1, name: 'Emily', age: 21},
+  {id: 2, name: 'Eva', age: 25},
+  {id: 3, name: 'Oleg', age: 50},
+]);
 
-const increment = () => {
-  count.value++
-}
-const increment1 = () => {
-  counter.count++
-}
 </script>
 
 <template>
   <div>
-    <button @click="increment">
-      Count:
-      <strong>{{ count }}</strong>
-    </button>
-    <button @click="increment1">
-      Count1:
-      <strong>{{ counter.count }}</strong>
-    </button>
+    <ul>
+      <li
+        v-for="user in users"
+        :key="user.id"
+        v-show="user.age <= 21"
+      >
+        {{  user.name }}
+        <sup>{{ user.age }}</sup>
+      </li>
+    </ul>
   </div>
 </template>
