@@ -17,18 +17,23 @@ const users = ref([
         :key="user.id"
       >
         {{  user.name }}
-        <sup v-if="user.name !== 'Oleg'">
+        <sup :class="{
+          'red': user.age < 30,
+          'fz-24': user.name === 'Eva',
+          }">
           {{ user.age }}
         </sup>
-
-        <span v-else-if="user.age === 50">
-          В расцвете сил
-        </span>
-
-        <span v-else>
-          В возрасте
-        </span>
       </li>
     </ul>
   </div>
 </template>
+
+<style>
+  .red {
+    color: red;
+  }
+
+  .fz-24 {
+    font-size: 24px;
+  }
+</style>
