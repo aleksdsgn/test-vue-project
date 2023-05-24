@@ -15,10 +15,19 @@ const users = ref([
       <li
         v-for="user in users"
         :key="user.id"
-        v-show="user.age <= 21"
       >
         {{  user.name }}
-        <sup>{{ user.age }}</sup>
+        <sup v-if="user.name !== 'Oleg'">
+          {{ user.age }}
+        </sup>
+
+        <span v-else-if="user.age === 50">
+          В расцвете сил
+        </span>
+
+        <span v-else>
+          В возрасте
+        </span>
       </li>
     </ul>
   </div>
