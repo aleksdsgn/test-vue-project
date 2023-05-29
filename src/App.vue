@@ -1,58 +1,115 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { reactive, computed } from 'vue';
 
-const products = ref([
-  {title: 'Яблоки', price: 54.5},
-  {title: 'Бананы', price: 32},
-  {title: 'Хлеб', price: 21.59},
-  {title: 'Сметана', price: 179},
-  {title: 'Молоко', price: 122},
-  {title: 'Снеки', price: 46},
-  {title: 'Шоколад', price: 119.50},
-  {title: 'Морковь', price: 11.29},
-]);
-
-const query = ref('');
-
-const queryProducts = computed(() => {
-  let p = products.value;
-  let search = query.value;
-
-  if(search) {
-    p = p.filter((product) => {
-      return product.title.indexOf(search) !== -1 ||
-      // product.price.toString().indexOf(search) !== -1
-      product.price <= search;
-    })
-  }
-  return p;
+const review = reactive({
+  author: '',
+  stars: null,
+  text: '',
+  photo: null,
+  isRecommended: true,
 });
+const previewFilePath = computed(() => {
+  if(review.photo) {
+    return URL.createObjectURL(review.photo);
+  }
+
+  return '#';
+});
+
+const stars = [1,2,3,4,5];
+
+const submit = () => {
+  console.log('submit!');
+};
+const uploadFile = (e) => {
+  const [file] = e.target.files;
+  review.photo = file;
+};
 </script>
 
 <template>
-  <div>
+  <form
+    @submit.prevent.stop="submit"
+    class="container pt-5 pb-5"
+  >
     <input
-      type="search"
-      placeholder="Поиск продуктов..."
-      v-model="query"
+      v-model="review.author"
+      type="text"
+      placeholder="Как вас зовут?"
+      class="form-control mb-3"
     >
-    <br>
-    <br>
 
-    {{  }}
+    <textarea
+      v-model="review.text"
+      rows="3"
+      placeholder="Что понравилось что нет?"
+      class="form-control mb-3"
+    ></textarea>
 
-    <ul>
-      <li
-        v-for="product in queryProducts"
-        :key="product"
+    <h4>Оценка</h4>
+    <div
+      v-for="star in stars"
+      :key="star"
+      class="form-check"
+    >
+      <input
+        class="form-check-input"
+        type="checkbox"
+        v-model="review.stars"
+        :true-value="star"
+        :false-value="null"
+        :id="`star${ star }`"
       >
-        {{ product.title }} -
-        <sup>
-          {{ product.price.toLocaleString() }}₽
-        </sup>
-      </li>
-    </ul>
-  </div>
+      <label class="form-check-label" :for="`star${ star }`">
+        {{ star }}
+      </label>
+    </div>
+    <!-- /.form-check -->
+
+    <div class="mb-3 mt-3">
+      <label class="form-label">Фото</label>
+      <input
+        class="form-control"
+        type="file"
+        @change="uploadFile"
+      >
+
+      <img :src="previewFilePath" alt="" class="w-100 mt-2">
+    </div>
+    <!-- /.mb-3 mt-3 -->
+
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="advice1"
+        v-model="review.isRecommended"
+        :value="false"
+      >
+      <label class="form-check-label" for="advice1">
+        Не советую
+      </label>
+    </div>
+    <!-- /.form-check -->
+
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="advice2"
+        v-model="review.isRecommended"
+        :value="true"
+      >
+      <label class="form-check-label" for="advice2">
+        Советую!
+      </label>
+    </div>
+    <!-- /.form-check -->
+
+    <button class="btn btn-primary mt-4">
+      Отправить!
+    </button>
+  </form>
 </template>
 
 <style>
